@@ -1,0 +1,61 @@
+/*************************************************************************
+	> File Name: 35.c
+	> Author:YEE 
+	> Mail:15509992895@163.com 
+	> Created Time: Wed 11 Sep 2024 03:20:06 PM CST
+ ************************************************************************/
+
+#include<stdio.h>
+#include<math.h>
+
+#define MAX_N 100
+
+int prime[MAX_N + 5] = {0};
+int piPrime[MAX_N / 5] = {0};
+
+void init_prime(){
+    for(int i = 2; i <= MAX_N; i++){
+        if(!prime[i]) prime[++prime[0]] = i;
+        for(int j = 1; j <= prime[0]; j++){
+            if(prime[j] * i > MAX_N) break;
+            prime[prime[j] * i] = 1;
+            if(i % prime[j] == 0) break;
+        }
+    }
+    return;
+}
+
+int is_piprime(int n){
+    int b = log10(n) + 1;
+    for(int i = 1; i < b; i++){
+        int n = n / 10 + (n % 10) * pow(10, b);
+        int flag = 0;
+        for(int i = 1; i <= prime[0]; i++){
+            if (n == prime[i]) {flag = 1;break;}
+        }
+        if(!flag) return 0;
+    }
+    return 1;
+    
+}
+
+void piprime(){
+    for(int i = 1; i <= prime[0]; i++){
+        if(is_piprime(prime[i])) {
+            piPrime[0] += 1;
+            piPrime[i] = prime[i];
+        }
+    }
+
+    return;
+}
+int main(){
+    init_prime();
+    piprime();
+    printf("%d\n", is_piprime(37));
+    for(int i = 0; i < piPrime[0] + 1; i++){
+        printf("%d ", piPrime[i]);
+    }
+    printf("\n");
+    return 0;
+}
